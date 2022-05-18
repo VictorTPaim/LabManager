@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite; //importar o sqlite
 using LabManager.Database; //importa o DatabaseSetup
+using LabManager.Repositories;//importa o Repositories
 
 var databaseSetup = new DatabaseSetup(); //cria uma instância do DatabaseSetup
 
@@ -8,23 +9,16 @@ var ModelAction = args[1];
 
 if(modelName == "Computer")
 {
+    var computerRepository = new ComputerRepository();
     if(ModelAction == "List")
     {
-        var connection = new SqliteConnection("Data Source=database.db");
-        connection.Open(); //ABRIR O ARQUIVO/conexão database.db
-
-
-        var command = connection.CreateCommand(); //comando criado no banco aberto
-        command.CommandText = "SELECT * FROM Computers";
-
-        var reader = command.ExecuteReader(); //representa o resultado da tabela
-
-        while(reader.Read())
+        Console.WriteLine("Computer List");
+        //var computers = computerRepository.GetAll();
+        foreach (var computer in computerRepository.GetAll())
         {
-            Console.WriteLine("{0}, {1}, {2}", reader.GetInt32(0), reader.GetString(1), reader.GetString(2)); //pegar o valor, readers em objeto Computador
+            //Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+            Console.WriteLine($"{computer.Id}, {computer.Ram}, {computer.Processor}");
         }
-
-        connection.Close(); // fecha a conexão
     }
 
     if(ModelAction == "New")

@@ -2,14 +2,17 @@
 using LabManager.Database; //importa o DatabaseSetup
 using LabManager.Repositories;//importa o Repositories
 
-var databaseSetup = new DatabaseSetup(); //cria uma instância do DatabaseSetup
+var databaseConfig = new DatabaseConfig();
+
+var DatabaseSetup = new DatabaseSetup(databaseConfig);
+
+var computerRepository = new ComputerRepository(databaseConfig);
 
 var modelName = args[0];
 var ModelAction = args[1];
 
 if(modelName == "Computer")
 {
-    var computerRepository = new ComputerRepository();
     if(ModelAction == "List")
     {
         Console.WriteLine("Computer List");

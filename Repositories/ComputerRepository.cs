@@ -42,6 +42,7 @@ class ComputerRepository
     public Computer Save(Computer computer)
     {
         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+
         connection.Open();
 
         var command = connection.CreateCommand();

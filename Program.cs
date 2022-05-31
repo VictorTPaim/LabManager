@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite; //importar o sqlite
 using LabManager.Database; //importa o DatabaseSetup
 using LabManager.Repositories;//importa o Repositories
+using LabManager.Models; //Importa o Models
 
 var databaseConfig = new DatabaseConfig();
 
@@ -30,17 +31,8 @@ if(modelName == "Computer")
         string ram = args[3];
         string processor = args[4];
 
-        var connection = new SqliteConnection("Data Source=database.db");
-        connection.Open(); //ABRIR O ARQUIVO/conexão database.db
+        var computer = new Computer(id, ram, processor);
 
-
-        var command = connection.CreateCommand(); //comando criado no banco aberto
-        command.CommandText = "INSERT INTO Computers VALUES ($id, $ram, $processor)"; //@ - STRING COM QUEBRA DE LINHA
-        command.Parameters.AddWithValue("$id", id);
-        command.Parameters.AddWithValue("$ram", ram);
-        command.Parameters.AddWithValue("$processor", processor);
-
-        command.ExecuteNonQuery(); //create não devolve nada, se fosse select teria retorno
-        connection.Close(); // fecha a conexão
+        computerRepository.Save(computer);
     }
 }

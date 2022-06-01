@@ -42,4 +42,15 @@ if(modelName == "Computer")
         var computer = computerRepository.GetById(id);
         Console.WriteLine($"{computer.Id}, {computer.Ram}, {computer.Processor}");
     }
+
+    if (ModelAction == "Update")
+    {
+        var id = Convert.ToInt32(args[2]);
+        var ram = args[3];
+        var processor = args[4];
+
+        var computer = new Computer(id, ram, processor);
+
+        computerRepository.Update(computer);
+    }
 }

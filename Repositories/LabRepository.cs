@@ -4,34 +4,34 @@ using Microsoft.Data.Sqlite;
 
 namespace LabManager.Repositories;
 
-class ComputerRepository
+class LabRepository
 {
     private readonly DatabaseConfig _databaseConfig;
-    public ComputerRepository(DatabaseConfig databaseConfig)
+    public LabRepository(DatabaseConfig databaseConfig)
     {
         _databaseConfig = databaseConfig;
     }
-    public List<Computer> GetAll()
+    public List<Lab> GetAll()
     {
-        var computers = new List<Computer>();
+        var labs = new List<Lab>();
 
         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open(); //ABRIR O ARQUIVO/conexão database.db
 
         var command = connection.CreateCommand(); //comando criado no banco aberto
-        command.CommandText = "SELECT * FROM Computers";
+        command.CommandText = "SELECT * FROM Labs";
 
         var reader = command.ExecuteReader(); //representa o resultado da tabela
 
         while(reader.Read())
         {
-            var computer = ReaderToComputer(reader);
-            computers.Add(computer);
+            var lab = ReaderToLab(reader); 
+            labs.Add(lab);
         }
 
         connection.Close(); //fecha a conexão
 
-        return computers;
+        return labs;
     }
 
     public Computer Save(Computer computer)
@@ -64,11 +64,13 @@ class ComputerRepository
         var reader = command.ExecuteReader();
         reader.Read();
 
-        var computer = ReaderToComputer(reader);
+        var ram = reader.GetString(1);
+        var processor = reader.GetString(2);
+        var computer = new Computer(id, ram, processor);
 
-        connection.Close(); 
+        connection.Close();
 
-        return computer;
+        return computer; 
     }
 
     public Computer Update(Computer computer)
@@ -101,28 +103,10 @@ class ComputerRepository
         connection.Close();
     }
 
-    public bool ExistsById(int id)
+    private Lab ReaderToLab(SqliteDataReader reader)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
+        var lab = new Lab(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetString(3));
 
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT count(id) FROM Computers WHERE id = ($id)";
-        command.Parameters.AddWithValue("$id", id);
-
-        var reader = command.ExecuteReader();
-        reader.Read();
-        var result = reader.GetBoolean(0);
-
-        //var result = Convert.ToBoolean(command.ExecuteScalar()); //O Scalar devolve apenas o primeiro da coluna e linha.
-
-        return result;
-    }
-
-    private Computer ReaderToComputer(SqliteDataReader reader)
-    {
-        var computer = new Computer(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
-
-        return computer;
+        return lab;
     }
 }

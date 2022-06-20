@@ -12,11 +12,11 @@ var computerRepository = new ComputerRepository(databaseConfig);
 var labRepository = new LabRepository(databaseConfig);
 
 var modelName = args[0];
-var ModelAction = args[1];
+var modelAction = args[1];
 
 if(modelName == "Computer")
 {
-    if(ModelAction == "List")
+    if(modelAction == "List")
     {
         Console.WriteLine("Computer List");
         //var computers = computerRepository.GetAll();
@@ -27,7 +27,7 @@ if(modelName == "Computer")
         }
     }
 
-    if(ModelAction == "New")
+    if(modelAction == "New")
     {
         int id = Convert.ToInt32(args[2]);
         string ram = args[3];
@@ -38,7 +38,7 @@ if(modelName == "Computer")
         computerRepository.Save(computer);
     }
 
-    if (ModelAction == "Show")
+    if (modelAction == "Show")
     {
         var id = Convert.ToInt32(args[2]);
 
@@ -52,9 +52,10 @@ if(modelName == "Computer")
         }
     }
 
-    if (ModelAction == "Update")
+    if (modelAction == "Update")
     {
         var id = Convert.ToInt32(args[2]);
+        
         var ram = args[3];
         var processor = args[4];
 
@@ -63,7 +64,7 @@ if(modelName == "Computer")
         computerRepository.Update(computer);
     }
 
-    if (ModelAction == "Delete")
+    if (modelAction == "Delete")
     {
         var id = Convert.ToInt32(args[2]);
         computerRepository.Delete(id);
@@ -72,7 +73,7 @@ if(modelName == "Computer")
 
 if(modelName == "Lab")
 {
-    if(ModelAction == "List")
+    if(modelAction == "List")
     {
         Console.WriteLine("Lab List");
         //var labs = labRepository.GetAll();
@@ -83,7 +84,7 @@ if(modelName == "Lab")
         }
     }
 
-    if(ModelAction == "New")
+    if(modelAction == "New")
     {
         int id = Convert.ToInt32(args[2]);
         int number = Convert.ToInt32(args[3]);
@@ -95,7 +96,7 @@ if(modelName == "Lab")
         labRepository.Save(lab);
     }
 
-    if (ModelAction == "Show")
+    if (modelAction == "Show")
     {
         var id = Convert.ToInt32(args[2]);
 
@@ -109,19 +110,18 @@ if(modelName == "Lab")
         }
     }
 
-    if (ModelAction == "Update")
+    if (modelAction == "Update")
     {
         var id = Convert.ToInt32(args[2]);
+
         var number = Convert.ToInt32(args[3]);
         var name = args[4];
         var block = args[5];
-
         var lab = new Lab(id, number, name, block);
-
         labRepository.Update(lab);
     }
 
-    if (ModelAction == "Delete")
+    if (modelAction == "Delete")
     {
         var id = Convert.ToInt32(args[2]);
         labRepository.Delete(id);

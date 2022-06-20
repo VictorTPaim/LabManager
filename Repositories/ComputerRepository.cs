@@ -1,6 +1,8 @@
 using LabManager.Database;
 using LabManager.Models;
 using Microsoft.Data.Sqlite;
+using Dapper;
+
 
 namespace LabManager.Repositories;
 
@@ -11,42 +13,24 @@ class ComputerRepository
     {
         _databaseConfig = databaseConfig;
     }
-    public List<Computer> GetAll()
+    public IEnumerable<Computer> GetAll()
     {
-        var computers = new List<Computer>();
-
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open(); //ABRIR O ARQUIVO/conexão database.db
-
-        var command = connection.CreateCommand(); //comando criado no banco aberto
-        command.CommandText = "SELECT * FROM Computers";
-
-        var reader = command.ExecuteReader(); //representa o resultado da tabela
-
-        while(reader.Read())
-        {
-            var computer = ReaderToComputer(reader);
-            computers.Add(computer);
-        }
-
-        connection.Close(); //fecha a conexão
-
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
+    
+        var computers = connection.Query<Computer>("SELECT * FROM Computers");
+    
         return computers;
     }
+
 
     public Computer Save(Computer computer)
     {
         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO Computers VALUES($id, $ram, $processor)";
-        command.Parameters.AddWithValue("$id", computer.Id);
-        command.Parameters.AddWithValue("$ram", computer.Ram);
-        command.Parameters.AddWithValue("$processor", computer.Processor);
+        connection.Execute("INSERT INTO Computers VALUES(@Id, @Ram, @Processor)", computer);
 
-        command.ExecuteNonQuery();
         connection.Close();
 
         return computer;

@@ -1,6 +1,8 @@
 using LabManager.Database;
 using LabManager.Models;
 using Microsoft.Data.Sqlite;
+using Dapper;
+
 
 namespace LabManager.Repositories;
 

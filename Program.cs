@@ -34,8 +34,14 @@ if(modelName == "Computer")
         string processor = args[4];
 
         var computer = new Computer(id, ram, processor);
-
-        computerRepository.Save(computer);
+        if(computerRepository.ExistsById(id))
+        {
+            Console.WriteLine("O computador com este ID ja existe!");
+        }else
+        {
+            computerRepository.Save(computer);
+            Console.WriteLine("Computador criado!");
+        }
     }
 
     if (modelAction == "Show")
@@ -56,18 +62,34 @@ if(modelName == "Computer")
     {
         var id = Convert.ToInt32(args[2]);
         
-        var ram = args[3];
-        var processor = args[4];
+        if(computerRepository.ExistsById(id))
+        {
+            var ram = args[3];
+            var processor = args[4];
 
-        var computer = new Computer(id, ram, processor);
+            var computer = new Computer(id, ram, processor);
 
-        computerRepository.Update(computer);
+            computerRepository.Update(computer);
+
+            Console.WriteLine("O computador foi atualizado!");
+        }else
+        {
+            Console.WriteLine($"O computador com id {id} não existe!");
+        }
     }
 
     if (modelAction == "Delete")
     {
         var id = Convert.ToInt32(args[2]);
-        computerRepository.Delete(id);
+
+        if(computerRepository.ExistsById(id))
+        {
+            computerRepository.Delete(id);
+            Console.WriteLine("O computador foi deletado!");
+        }else
+        {
+            Console.WriteLine($"O computador com id {id} não existe!");
+        }
     }
 }
 
@@ -92,8 +114,14 @@ if(modelName == "Lab")
         string block = args[5];
 
         var lab = new Lab(id, number, name, block);
-
-        labRepository.Save(lab);
+        if(labRepository.ExistsById(id))
+        {
+            Console.WriteLine("O laboratorio com este ID já existe!");
+        }else
+        {
+            labRepository.Save(lab);
+            Console.WriteLine("Laboratorio criado!");
+        }
     }
 
     if (modelAction == "Show")
@@ -114,16 +142,33 @@ if(modelName == "Lab")
     {
         var id = Convert.ToInt32(args[2]);
 
-        var number = Convert.ToInt32(args[3]);
-        var name = args[4];
-        var block = args[5];
-        var lab = new Lab(id, number, name, block);
-        labRepository.Update(lab);
+        if(labRepository.ExistsById(id))
+        {
+            var number = Convert.ToInt32(args[3]);
+            var name = args[4];
+            var block = args[5];
+            var lab = new Lab(id, number, name, block);
+            labRepository.Update(lab);
+            
+            Console.WriteLine("O laboratório foi atualizado");
+        }else
+        {
+            Console.WriteLine($"O laboratório com id {id} não existe!");
+        }
     }
 
     if (modelAction == "Delete")
     {
         var id = Convert.ToInt32(args[2]);
-        labRepository.Delete(id);
+
+        if(labRepository.ExistsById(id))
+        {
+            labRepository.Delete(id);
+
+            Console.WriteLine("O laboratório foi deletado");
+        }else
+        {
+            Console.WriteLine($"O laboratório com id {id} não existe!");
+        }
     }
 }

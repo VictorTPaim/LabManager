@@ -15,25 +15,25 @@ class ComputerRepository
     }
     public IEnumerable<Computer> GetAll()
     {
-    using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-    connection.Open();
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
 
-    var computers = connection.Query<Computer>("SELECT * FROM Computers");
+        var computers = connection.Query<Computer>("SELECT * FROM Computers");
 
-    return computers;
+        return computers;
     }
 
 
     public Computer Save(Computer computer)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
+        using (var connection = new SqliteConnection(_databaseConfig.ConnectionString))
+        {
+            connection.Open();
 
-        connection.Execute("INSERT INTO Computers VALUES(@Id, @Ram, @Processor)", computer);
+            connection.Execute("INSERT INTO Computers VALUES(@Id, @Ram, @Processor)", computer);
 
-        connection.Close();
-
-        return computer;
+            return computer;
+        }
     }
 
     public Computer GetById(int id)
@@ -72,12 +72,5 @@ class ComputerRepository
         var existsById = connection.ExecuteScalar<bool>("SELECT COUNT(ID) FROM Computers WHERE id = @Id", new { @Id = id });
 
         return existsById;
-    }
-
-    private Computer ReaderToComputer(SqliteDataReader reader)
-    {
-        var computer = new Computer(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
-
-        return computer;
     }
 }

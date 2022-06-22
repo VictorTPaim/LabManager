@@ -66,20 +66,12 @@ class ComputerRepository
 
     public bool ExistsById(int id)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT count(id) FROM Computers WHERE id = ($id)";
-        command.Parameters.AddWithValue("$id", id);
+        var existsById = connection.ExecuteScalar<bool>("SELECT COUNT(ID) FROM Computers WHERE id = @Id", new { @Id = id });
 
-        var reader = command.ExecuteReader();
-        reader.Read();
-        var result = reader.GetBoolean(0);
-
-        //var result = Convert.ToBoolean(command.ExecuteScalar()); //O Scalar devolve apenas o primeiro da coluna e linha.
-
-        return result;
+        return existsById;
     }
 
     private Computer ReaderToComputer(SqliteDataReader reader)
